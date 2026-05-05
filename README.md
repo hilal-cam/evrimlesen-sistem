@@ -1,4 +1,4 @@
-# 🏗 EVRİMLEŞEN SİSTEM - Yazılım Tasarım Örüntüleri Ödevi
+# EVRİMLEŞEN SİSTEM - Yazılım Tasarım Örüntüleri Ödevi
 
 ## Öğrenci Bilgileri
 *   **Ad Soyad:** Hilal Çam
