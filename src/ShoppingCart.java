@@ -2,25 +2,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-enum KartTipi {
+
+enum KartTipi { 
 	VISA, MASTERCARD, TROY 
 	}
 enum UyeTipi { 
 	STANDART, GOLD, PREMİUM 
 	}
 enum KiyafetTipi {
-	TISORT, GOMLEK, PANTOLON, ELBISE 
+	TISORT, GOMLEK, PANTOLON, ELBISE
 	}
 enum Renk { 
 	MAVI, YESIL, TURUNCU, KIRMIZI, KAHVERENGİ, SIYAH, BORDO, SARI 
 	}
-enum Marka { 
+enum Marka {
 	DEFACTO, MAVI, KOTON, GUCCI 
 	}
 enum KumasTipi { 
 	KETEN, PAMUK, VISKON, POLYESTER 
 	}
-enum Beden { 
+enum Beden {
 	S, M, L, XL 
 	}
 
@@ -42,39 +43,35 @@ class Kiyafet {
     }
 }
 
-
 class Satici {
     public String saticiAd;
-    
-    public Satici(String saticiAd) {
-        this.saticiAd = saticiAd;
-    }
+    public Satici(String saticiAd) { this.saticiAd = saticiAd; }
 
-   
     public Kiyafet yeniUrunOlustur() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("--- Satıcı Ürün Giriş Paneli ---");
+        System.out.println("--- Detaylı Ürün Giriş Paneli ---");
         
-        System.out.print("Kıyafet Türü: ");
-        String tip = scanner.next().toUpperCase();
+        System.out.print("Ürün Tipi (TISORT, GOMLEK...): ");
+        KiyafetTipi tip = KiyafetTipi.valueOf(scanner.next().toUpperCase());
         
         System.out.print("Renk: ");
-        String renk = scanner.next().toUpperCase();
+        Renk rnk = Renk.valueOf(scanner.next().toUpperCase());
         
-        System.out.print("Temel Satış Fiyatı: ");
-        double fiyat = scanner.nextDouble();
+        System.out.print("Marka (DEFACTO, GUCCI...): ");
+        Marka mrk = Marka.valueOf(scanner.next().toUpperCase());
+        
+        System.out.print("Kumaş (PAMUK, KETEN...): ");
+        KumasTipi kms = KumasTipi.valueOf(scanner.next().toUpperCase());
+        
+        System.out.print("Beden (S, M, L, XL): ");
+        Beden bdn = Beden.valueOf(scanner.next().toUpperCase());
+        
+        System.out.print("Fiyat: ");
+        double fyt = scanner.nextDouble();
 
-        return new Kiyafet(
-            KiyafetTipi.valueOf(tip),
-            Renk.valueOf(renk),
-            Marka.DEFACTO,
-            KumasTipi.PAMUK,
-            Beden.L,
-            fiyat
-        );
+        return new Kiyafet(tip, rnk, mrk, kms, bdn, fyt);
     }
 }
-
 
 class Musteri {
     public String musteriAd;
@@ -87,13 +84,9 @@ class Musteri {
     }
 
     public void sepeteEkle(Kiyafet k) {
-        if (k != null) {
-            sepet.add(k);
-            System.out.println(k.kiyafetTipi + " sepete eklendi.");
-        }
+        if (k != null) sepet.add(k);
     }
 
-    
     public double AlisverisTutarHesapla() {
         double toplam = 0;
         double kargoUcreti = 35.0;
@@ -101,12 +94,21 @@ class Musteri {
         for (Kiyafet k : sepet) {
             double urunFiyati = k.fiyat;
 
-            if (k.renk == Renk.KIRMIZI) urunFiyati -= urunFiyati * 0.20;
-            else if (k.renk == Renk.MAVI) urunFiyati -= urunFiyati * 0.10;
+            if (k.marka == Marka.GUCCI) urunFiyati += 500; 
+            else if (k.marka == Marka.MAVI) urunFiyati += 50;
 
-          
-            if (uyeTipi == UyeTipi.GOLD) urunFiyati -= 25;
-            else if (uyeTipi == UyeTipi.PREMİUM) urunFiyati -= 55;
+            if (k.renk == Renk.KIRMIZI) urunFiyati -= urunFiyati * 0.10;
+            else if (k.renk == Renk.BORDO) urunFiyati -= 20;
+
+            if (k.kumasTipi == KumasTipi.KETEN) urunFiyati += 30;
+            else if (k.kumasTipi == KumasTipi.POLYESTER) urunFiyati -= 15;
+
+            if (k.beden == Beden.XL) urunFiyati += 10;
+
+            if (k.kiyafetTipi == KiyafetTipi.ELBISE) urunFiyati *= 1.2;
+
+            if (uyeTipi == UyeTipi.GOLD) urunFiyati -= 30;
+            else if (uyeTipi == UyeTipi.PREMİUM) urunFiyati -= 70;
 
             toplam += urunFiyati;
         }
@@ -116,24 +118,21 @@ class Musteri {
     }
 
     public void odemeIslemleri(KartTipi kart, double tutar) {
-
-        System.out.println(kart + " ile " + tutar + " TL ödeme yapıldı. İşlem başarılı.");
+    	
+        if (kart == KartTipi.VISA) tutar += 2;
+        System.out.println(kart + " ile " + tutar + " TL ödendi.");
     }
 }
-
 
 public class ShoppingCart {
     public static void main(String[] args) {
         Satici satici = new Satici("Hilal Mağazacılık");
-        Musteri musteri = new Musteri("Hilal Çam", UyeTipi.PREMİUM);
+        Musteri musteri = new Musteri("Hilal Çam", UyeTipi.GOLD);
         
-  
-        Kiyafet urun1 = satici.yeniUrunOlustur();
-        musteri.sepeteEkle(urun1);
+        Kiyafet urun = satici.yeniUrunOlustur();
+        musteri.sepeteEkle(urun);
         
         double toplam = musteri.AlisverisTutarHesapla();
-        System.out.println("Toplam Ödenecek: " + toplam);
-        
-        musteri.odemeIslemleri(KartTipi.VISA, toplam);
+        musteri.odemeIslemleri(KartTipi.TROY, toplam);
     }
 }
