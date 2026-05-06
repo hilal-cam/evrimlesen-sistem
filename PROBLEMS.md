@@ -12,3 +12,6 @@ Bu dosya, projenin ilk aşamasında tasarım örüntüleri kullanılmadan yazıl
 4) Kargo Limitleri: Kargo 35 TL, sınır 450 TL diye kodun içine "çat" diye yazdım. Yarın bu limitler değişirse, oturup tek tek kodda bu rakamları aramaya başlayacağım. Bunların bir yerden dinamik gelmesi lazım.
 
 5) Gereksiz Bağımlılık: Şu an indirim mantığı tamamen Musteri sınıfının içine hapsolmuş durumda. Yarın bir gün "Satıcılar için de bir kampanya yapalım" desek veya başka bir sınıfta bu indirimleri kullanmak istesek, mecburen bu kodları oraya kopyalayıp yapıştırmam gerekecek. İndirim mantığı bağımsız bir parça (modül) olmadığı için kodu başka yerde kullanamıyorum, her şey birbirine bağlı.
+
+
+## AI' ın Gördüğü Sorunlar
