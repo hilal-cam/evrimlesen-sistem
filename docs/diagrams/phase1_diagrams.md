@@ -1,17 +1,4 @@
-### Faz 0 :
-```mermaid
-classDiagram
-    direction TB
-    class Satici {
-        +urunEkle()
-    }
-    class Kiyafet {
-        -ad: String
-        -fiyat: double
-    }
-    Satici ..> Kiyafet : <<new>> Doğrudan Bağlı
-```
-### Faz 1 :
+### Faz 1 UML Diyagramı:
 ```mermaid
 classDiagram
     direction TB
