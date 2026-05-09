@@ -12,16 +12,57 @@ Bu dosya, projenin ilerleyen fazlarında sisteme dahil edilecek olan tasarım ö
 ## 3. Davranışsal Örüntüler (Behavioral Patterns)
 *  **Hedef:** Sepetteki indirim hesaplama mantığını (Strategy Pattern gibi) dinamik hale getirmek ve if-else yığınlarından kurtulmak.
 
-## Faz: 1 - Factory Method Örüntüsü
+### Faz: 1 - Factory Method Örüntüsü
 
-Bu aşamada, sistemdeki nesne yaratma süreçlerini kontrol altına almak ve sınıflar arasındaki bağımlılığı (coupling) minimize etmek amacıyla **Factory Method** tasarım örüntüsü uygulanmıştır.
+#### 1. Nerede Kullandınız?
+Bu örüntüyü sistemin ürün oluşturma (nesne yaratma) aşamasında uyguladım. Satici sınıfı içinde bulunan ve doğrudan nesne üreten mantığı, yeni oluşturduğum UrunFactory sınıfına taşıyarak merkezi bir üretim noktası oluşturdum.
 
-### 1. Uygulanan Örüntü: Factory Method
-- **Problem:** Satici sınıfı, ürünleri oluştururken doğrudan new Kiyafet(...) söz dizimini kullanıyordu. Bu durum, satıcı sınıfının somut ürün detaylarına sıkı sıkıya bağlı kalmasına neden oluyor ve yeni ürün tipleri eklemeyi zorlaştırıyordu.
-- **Çözüm:** UrunFactory sınıfı merkezi bir karar noktası olarak sisteme dahil edildi. Nesne oluşturma sorumluluğu bu sınıfa devredilerek Satici ve ShoppingCart sınıflarının somut sınıflardan (UstGiyim, AltGiyim) soyutlanması sağlandı.
-- **Uygulama:** Fabrika yapısı, KiyafetTipi bilgisini analiz ederek arka planda doğru alt sınıfın (Örn: UstGiyim) örneğini oluşturur.
+#### 2. Neden Kullandınız?
+Faz 0'da Satici sınıfı, UstGiyim ve AltGiyim gibi somut sınıflara doğrudan bağlıydı (**Tight Coupling**). Bu durum, her yeni ürün tipi eklendiğinde Satici sınıfının kodunu değiştirmeyi zorunlu kılıyordu. Nesne yaratma sorumluluğunu bir fabrikaya devrederek sınıflar arası bağımlılığı azaltmak ve sistemi genişletilebilir hale getirmek için bu örüntüyü seçtim.
 
-### 2. Sağlanan Teknik Avantajlar
-- **Gevşek Bağlılık (Loose Coupling):** Üst seviye modüller, nesnelerin nasıl oluşturulduğuyla ilgilenmeyi bırakmıştır.
-- **Bakım Kolaylığı:** Ürün oluşturma mantığında yapılacak bir değişiklik (örneğin yeni bir parametre eklenmesi) artık tüm kod tabanında değil, sadece UrunFactory içinde yapılacaktır.
-- **Polimorfizm:** Tüm ürünler Kiyafet arayüzü/sınıfı üzerinden işleme alınarak kodun daha esnek olması sağlanmıştır.
+#### 3. Ne Kazandınız?
+* **Gevşek Bağlılık (Loose Coupling):** Satici ve ShoppingCart sınıfları artık ürünlerin nasıl yaratıldığıyla ilgilenmiyo, sadece fabrikadan ürün talep ediyor.
+* **Polimorfizm:** Tüm ürünler Kiyafet üst sınıfı üzerinden işleme alınarak kodun esnekliği artırıldı.
+* **Bakım Kolaylığı:** Ürün oluşturma mantığında yapılacak bir değişiklik artık tüm sınıflarda değil, sadece UrunFactory içinde tek bir noktada yapılmaktadır.
+
+---
+
+### Önce/Sonra UML Sınıf Diyagramı
+
+### Faz 0 (Öncesi) :
+```mermaid
+classDiagram
+    direction TB
+    class Satici {
+        -name: String
+        +urunEkle(tur: String, ad: String, fiyat: double)
+    }
+    class Kiyafet {
+        -ad: String
+        -fiyat: double
+        +bilgileriYazdir()
+    }
+
+    Satici ..> Kiyafet : <<new>> Doğrudan Bağlı
+    note for Satici "Problem: Satici her yeni üründe\nKiyafet sınıfına gömülü (tightly coupled) çalışıyor."
+
+### Faz 1 (Sonrası) :
+    classDiagram
+    direction TB
+    class Satici {
+        -urunFactory: UrunFactory
+        +urunEkle()
+    }
+    class UrunFactory {
+        +createKiyafet() Kiyafet
+    }
+    class Kiyafet {
+        <<abstract>>
+    }
+    class UstGiyim
+    class AltGiyim
+
+    Satici --> UrunFactory : Kullanır
+    UrunFactory ..> Kiyafet : Üretir
+    UstGiyim --|> Kiyafet : Miras Alır
+    AltGiyim --|> Kiyafet : Miras Alır
