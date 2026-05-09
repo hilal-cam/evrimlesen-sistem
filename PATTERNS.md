@@ -82,7 +82,7 @@ Bu aşamada, mevcut sınıfların yapısını bozmadan sisteme yeni yetenekler v
 
 ### **UML Diyagramı Güncellemesi**
 
-#### **Faz 1 (Öncesi) :**
+### Faz 1 (Öncesi) :
 ```mermaid
 classDiagram
     direction TB
@@ -106,7 +106,7 @@ classDiagram
     UstGiyim --|> Kiyafet : Miras Alır
     AltGiyim --|> Kiyafet : Miras Alır
 ```
-#### ** Faz 2 (Sonrası) :**
+### Faz 2 (Sonrası) :
 ```mermaid
 classDiagram
     direction TB
