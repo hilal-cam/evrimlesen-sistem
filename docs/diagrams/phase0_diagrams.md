@@ -10,4 +10,4 @@ classDiagram
         -fiyat: double
     }
     Satici ..> Kiyafet : <<new>> Doğrudan Bağlı
-```
+``` 
