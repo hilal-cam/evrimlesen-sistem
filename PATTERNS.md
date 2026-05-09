@@ -34,16 +34,33 @@ Faz 0'da Satici sınıfı, UstGiyim ve AltGiyim gibi somut sınıflara doğrudan
 classDiagram
     direction TB
     class Satici {
-        -name: String
-        +urunEkle(tur: String, ad: String, fiyat: double)
+        +urunEkle()
     }
     class Kiyafet {
         -ad: String
         -fiyat: double
-        +bilgileriYazdir()
     }
-
     Satici ..> Kiyafet : <<new>> Doğrudan Bağlı
-    note for Satici "Problem: Satici her yeni üründe\nKiyafet sınıfına gömülü (tightly coupled) çalışıyor."
+```
+### Faz 1 (Sonrası) :
+```mermaid
+classDiagram
+    direction TB
+    class Satici {
+        -urunFactory: UrunFactory
+        +urunEkle()
+    }
+    class UrunFactory {
+        +createKiyafet() Kiyafet
+    }
+    class Kiyafet {
+        <<abstract>>
+    }
+    class UstGiyim
+    class AltGiyim
 
-
+    Satici --> UrunFactory : Nesne Talep Eder
+    UrunFactory ..> Kiyafet : Üretir
+    UstGiyim --|> Kiyafet : Miras Alır
+    AltGiyim --|> Kiyafet : Miras Alır
+```
