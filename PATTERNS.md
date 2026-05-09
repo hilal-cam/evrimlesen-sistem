@@ -46,23 +46,4 @@ classDiagram
     Satici ..> Kiyafet : <<new>> Doğrudan Bağlı
     note for Satici "Problem: Satici her yeni üründe\nKiyafet sınıfına gömülü (tightly coupled) çalışıyor."
 
-### Faz 1 (Sonrası) :
-    classDiagram
-    direction TB
-    class Satici {
-        -urunFactory: UrunFactory
-        +urunEkle()
-    }
-    class UrunFactory {
-        +createKiyafet() Kiyafet
-    }
-    class Kiyafet {
-        <<abstract>>
-    }
-    class UstGiyim
-    class AltGiyim
 
-    Satici --> UrunFactory : Kullanır
-    UrunFactory ..> Kiyafet : Üretir
-    UstGiyim --|> Kiyafet : Miras Alır
-    AltGiyim --|> Kiyafet : Miras Alır
