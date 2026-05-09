@@ -1,4 +1,4 @@
-**Soru:** Projenin ikinci aşamasında dış ödeme servisini entegre etmek için Adapter örüntüsü tercih edildi. Bu senaryo için Bridge veya Facade örüntülerini kullanmak daha mı avantajlı olurdu? Bu örüntülerin farkları nelerdir?
+**Soru:** Projenin ikinci aşamasında dış ödeme servisini entegre etmek için Adapter örüntüsü tercih ettim. Bu senaryo için Bridge veya Facade örüntülerini kullanmak daha mı avantajlı olurdu? Bu örüntülerin farkları nelerdir?
 
 **AI Cevap:** Mevcut senaryo incelendiğinde Adapter kullanımı, sistemin ihtiyaçlarını en doğru karşılayan yaklaşımdır. Diğer örüntülerle arasındaki farklar şu şekildedir:
 
@@ -7,3 +7,5 @@ Adapter vs. Facade: Facade, çok sayıda sınıftan oluşan karmaşık bir alt s
 Adapter vs. Bridge: Bridge örüntüsü, tasarımın en başında soyutlama (abstraction) ve uygulamayı (implementation) birbirinden tamamen ayırmak için kurgulanır. Mevcut bir yapıya (Phase 1) sonradan harici bir modül eklenirken Bridge kullanmak, tüm sınıf hiyerarşisinin yeniden tasarlanmasını gerektirir. Adapter ise mevcut koda dokunmadan uyumluluk sağlar.
 
 Tasarım Uygunluğu: Amacın mevcut kodun işleyişini bozmadan (Open/Closed Prensibi) sisteme yeni bir parça eklemek olduğu durumlarda Adapter örüntüsü en efektif çözümdür.
+
+**AI' ın Cevabında Yanlış ve Eksik Bulduğum Nokta:** AI bana "Facade kullanımı bu aşamada gereksiz bir katman oluşturur" diyerek Adapter' ın daha iyi bir çözüm olduğunu söyledi. Teknik olarak bu aşamada tek bir dış servis bağladığımız için Adapter daha efektif ve hızlı bir çözüm olabilir, bu konuda AI haklı. Fakat AI'ın eksik kaldığı nokta projenin gelecekteki genişleme potansiyeli. İleride sisteme farklı ödeme kanalları veya banka servisleri gibi yeni sınıflar eklendiğinde kod karmaşıklaşacaktır. Benim görüşüm, bu durumda o karmaşık yapıyı daha basit bir arayüz arkasında toplamak için Facade kullanımı çok daha iyi bir seçenek olacaktır. AI sadece "bu aşamaya" odaklanırken, ben projenin ilerleyen süreçlerdeki anlaşılabilirliğini ve yönetim kolaylığını da hesaba katarak Facade seçeneğini cebimde tutmayı daha doğru buluyorum. Şuanki aşamada sisteme sadece tek bir dış servis entegre ettiğim için Adapter kullandım. Eğer birden fazla servis entegre edecek olsaydım Facade kullanmayı tercih ederdim.
