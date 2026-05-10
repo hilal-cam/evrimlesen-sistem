@@ -157,7 +157,7 @@ classDiagram
     OdemeAdapter --> DisOdemeServisi : Adapte Eder
 ```
 
-### **Faz 3: Behavioral Patterns (Davranışsal Örüntüler)**
+### **Faz 3: Behavioral Patterns (Davranışsal Örüntüler)** 
 
 Projenin final aşamasında, sistemin çalışma anındaki kararlarını esnek hale getirmek ve nesneler arası iletişimi otomatize etmek amacıyla iki davranışsal örüntü sisteme entegre edilmiştir.
 
