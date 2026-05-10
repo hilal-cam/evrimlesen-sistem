@@ -218,8 +218,6 @@ classDiagram
 
 ## **## Proje Son Durum**
 
-## **## Proje Son Durum**
-
 Projem, bir e-ticaret platformunun sepet ve stok yönetim süreçlerini temel almaktadır. Başlangıçta monolitik ve karmaşık olan yapı; ürün kategorizasyonu, dinamik ek hizmetler, ödeme entegrasyonu, esnek indirim tanımlama ve otomatik bildirim sistemlerini içerecek şekilde modüler bir mimariye dönüştürülmüştür.
 
 ### **Uygulanan Tasarım Örüntüleri**
