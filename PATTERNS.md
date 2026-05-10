@@ -163,13 +163,13 @@ Projenin final aşamasında, sistemin çalışma anındaki kararlarını esnek h
 
 #### **1. Strategy Pattern (Strateji Örüntüsü)**
 * **Kullanım Amacı:** Sepetteki indirim hesaplama mantığını (Öğrenci, Bayram, Sezon Sonu vb.) birbirinden ayırarak, çalışma anında (runtime) değiştirilebilir hale getirmek.
-* **Neden Tercih Edildi?** Sürekli büyüyen `if-else` yığınlarını temizlemek ve her indirim türünü kendi sınıfına hapsederek projenin genişletilebilirliğini (**Open-Closed Principle**) artırmak için seçilmiştir.
-* **Uygulama:** `IndirimStratejisi` arayüzü üzerinden türetilen farklı sınıflar, sepet tutarını kendi algoritmalarına göre hesaplar.
+* **Neden Tercih Edildi?** Sürekli büyüyen if-else yığınlarını temizlemek ve her indirim türünü kendi sınıfına hapsederek projenin genişletilebilirliğini (**Open-Closed Principle**) artırmak için seçilmiştir.
+* **Uygulama:** IndirimStratejisi arayüzü üzerinden türetilen farklı sınıflar, sepet tutarını kendi algoritmalarına göre hesaplar.
 
 #### **2. Observer Pattern (Gözlemci Örüntüsü)**
 * **Kullanım Amacı:** Bir ürünün stok durumu veya fiyatı değiştiğinde, o ürünü takip eden müşterilere otomatik bildirim gönderilmesini sağlamak.
 * **Neden Tercih Edildi?** Nesneler arasındaki bağımlılığı (**tight coupling**) azaltarak, bir nesnedeki değişikliği ilgili diğer tüm nesnelere manuel müdahale olmadan duyurmak amacıyla tercih edilmiştir.
-* **Uygulama:** `Subject` arayüzünü uygulayan ürün sınıfları, stok azaldığında kayıtlı `Observer` (Müşteri) nesnelerini otomatik olarak haberdar eder.
+* **Uygulama:** Subject arayüzünü uygulayan ürün sınıfları, stok azaldığında kayıtlı Observer (Müşteri) nesnelerini otomatik olarak haberdar eder.
 
 ### **Final UML Sınıf Diyagramı (Görünüm)**
 
