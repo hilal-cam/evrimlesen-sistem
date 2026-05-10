@@ -43,13 +43,52 @@ class Kiyafet {
         this.fiyat = fiyat;
     }
 }
+// NOT: Yorum satırına aldığım sınıfları modüler olması için ayrı ayrı .java uzantılı dosyalarda tanımladım. Buraya yorum satırı olarak yazmamın nedeni projeyi tek bir bütün dosyada görebilmek.
+/*
+class UstGiyim extends Kiyafet {
+    public UstGiyim(KiyafetTipi tip, Renk r, Marka m, KumasTipi k, Beden b, double f) {
+        super(tip, r, m, k, b, f);
+    }
+    @Override
+    public double getFiyat() { return fiyat; }
+}
+*/
+/*
+class AltGiyim extends Kiyafet {
+    public AltGiyim(KiyafetTipi tip, Renk r, Marka m, KumasTipi k, Beden b, double f) {
+        super(tip, r, m, k, b, f);
+    }
+    @Override
+    public double getFiyat() { return fiyat; }
+} 
+*/
 
 // --- TASARIM ÖRÜNTÜSÜ: FACTORY CLASS ---
+/*
 class UrunFactory {
     public static Kiyafet kiyafetOlustur(KiyafetTipi tip, Renk rnk, Marka mrk, KumasTipi kms, Beden bdn, double fyt) {
         return new Kiyafet(tip, rnk, mrk, kms, bdn, fyt);
     }
 }
+*/
+/*
+// [FAZ 2: DECORATOR PATTERN]
+class HediyePaketiDecorator extends KiyafetDecorator {
+    public HediyePaketiDecorator(Kiyafet urun) { super(urun); }
+    @Override
+    public double getFiyat() { return super.getFiyat() + 20.0; }
+}
+
+// [FAZ 2: ADAPTER PATTERN]
+class OdemeAdapter {
+    private DisOdemeServisi servis = new DisOdemeServisi();
+    public void odemeYap(String isim, double tutar) {
+        servis.servisOdemesi(isim, tutar);
+    }
+}
+*/
+
+
 
 class Satici {
     public String saticiAd;
@@ -126,13 +165,29 @@ class Musteri {
 
 public class ShoppingCart {
     public static void main(String[] args) {
+        // 1. Hazırlık: Satıcı ve Müşteri nesneleri
         Satici satici = new Satici("Hilal Mağazacılık");
         Musteri musteri = new Musteri("Hilal Çam", UyeTipi.GOLD);
         
+        // 2. Faz 1: Ürün Oluşturma (UrunFactory üzerinden)
         Kiyafet urun = satici.yeniUrunOlustur();
-        musteri.sepeteEkle(urun);
         
+        // 3. Faz 2: Decorator Uygulama 
+        // Yanda tanımladığın HediyePaketiDecorator sınıfını çağırıyoruz.
+        Kiyafet hediyePaketliUrun = new HediyePaketiDecorator(urun);
+
+        // Sepete süslenmiş ürünü ekle
+        musteri.sepeteEkle(hediyePaketliUrun);
+        
+        // 4. Hesaplama ve Ödeme (Adapter kullanımı)
         double toplam = musteri.AlisverisTutarHesapla();
+        
+        System.out.println("\n--- Faz 2 İşlem Özeti ---");
+        System.out.println("Ürün Tipi: " + urun.kiyafetTipi);
+        System.out.println("Toplam Tutar (Süsleme Dahil): " + toplam + " TL");
+        
+        // Ödeme kısmı
         musteri.odemeIslemleri(KartTipi.TROY, toplam);
     }
 }
+
