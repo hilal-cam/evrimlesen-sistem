@@ -218,19 +218,19 @@ classDiagram
 
 ## **## Proje Son Durum**
 
-"Evrimleşen Sistem" projesi, başlangıçta monolitik ve karmaşık olan bir yapının, tasarım desenleri kullanılarak nasıl modüler, esnek ve sürdürülebilir bir mimariye dönüştürülebileceğini göstermektedir. Proje, her aşamada yeni bir tasarım örüntüsü eklenerek sistemin yeteneklerinin artırıldığı bir gelişim sürecini temsil eder.
+## **## Proje Son Durum**
+
+Projem, bir e-ticaret platformunun sepet ve stok yönetim süreçlerini temel almaktadır. Başlangıçta monolitik ve karmaşık olan yapı; ürün kategorizasyonu, dinamik ek hizmetler, ödeme entegrasyonu, esnek indirim tanımlama ve otomatik bildirim sistemlerini içerecek şekilde modüler bir mimariye dönüştürülmüştür.
 
 ### **Uygulanan Tasarım Örüntüleri**
 
-1.  **Factory Method (Faz 1):** Ürün nesnelerinin yaratılma mantığını merkezi bir fabrikaya taşıyarak, sistemin yeni ürün tiplerine (Üst Giyim, Alt Giyim vb.) kolayca adapte olmasını sağladık.
-2.  **Decorator (Faz 2):** Mevcut ürün sınıflarını bozmadan, çalışma anında ürünlere "Hediye Paketi" gibi ek özellikler ve maliyetler ekledik.
-3.  **Adapter (Faz 2):** Harici ödeme servislerini (Iyzico, PayU vb.), sistemin mevcut ödeme arayüzüne uyumlu hale getirerek dış sistem bağımlılığını yönettik.
-4.  **Strategy (Faz 3):** İndirim hesaplama mantığını (Öğrenci, Bayram, Sezon Sonu) dinamik hale getirerek, `if-else` kalabalığından kurtulduk.
-5.  **Observer (Faz 3):** Stok durumlarındaki değişiklikleri ilgili kullanıcılara otomatik olarak bildiren bir abonelik mekanizması kurduk.
+1. **Factory Method (Faz 1) - `UrunFactory.createUrun()`:** Ürün nesnelerinin yaratılma mantığını merkezi bir fabrikaya taşıyarak; Üst Giyim, Alt Giyim gibi yeni ürün tipleri eklendiğinde sistemin mevcut kodunu bozmadan kolayca adapte olmasını sağladık.
+2. **Decorator (Faz 2) - `UrunDecorator.getFiyat()`:** Mevcut ürün sınıflarına dokunmadan, çalışma anında ürünlere "Hediye Paketi" gibi ek özellikler ve maliyetler ekleyebileceğimiz esnek bir yapı kurduk.
+3. **Adapter (Faz 2) - `OdemeAdapter.odemeYap()`:** Harici ödeme servislerini (Iyzico, PayU vb.) kendi sistemimizin arayüzüne uyumlu hale getirerek, dış sistemlerdeki değişikliklerin bizim sipariş sürecimizi etkilemesini engelledik.
+4. **Strategy (Faz 3) - `IndirimStratejisi.hesapla()`:** Farklı indirim mantıklarını (Öğrenci, Bayram, Sezon Sonu) bağımsız sınıflara ayırarak sistemi `if-else` kalabalığından kurtardık ve çalışma anında indirim türü değiştirebilme esnekliği kazandırdık.
+5. **Observer (Faz 3) - `StokSubject.notifyObservers()`:** Stok durumlarındaki değişiklikleri (stok bitmesi vb.) takip listesindeki kullanıcılara otomatik olarak bildiren bir abonelik mekanizması kurgulayarak nesneler arası bağımlılığı (coupling) minimize ettik.
 
----
-
-### **Final Mimari Diyagramı**
+### **Proje Mimari Diyagram**
 
 ```mermaid
 classDiagram
