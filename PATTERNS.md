@@ -156,3 +156,130 @@ classDiagram
     OdemeSistemi <|.. OdemeAdapter : İmplement Eder
     OdemeAdapter --> DisOdemeServisi : Adapte Eder
 ```
+
+### **Faz 3: Behavioral Patterns (Davranışsal Örüntüler)**
+
+Projenin final aşamasında, sistemin çalışma anındaki kararlarını esnek hale getirmek ve nesneler arası iletişimi otomatize etmek amacıyla iki davranışsal örüntü sisteme entegre edilmiştir.
+
+#### **1. Strategy Pattern (Strateji Örüntüsü)**
+* **Kullanım Amacı:** Sepetteki indirim hesaplama mantığını (Öğrenci, Bayram, Sezon Sonu vb.) birbirinden ayırarak, çalışma anında (runtime) değiştirilebilir hale getirmek.
+* **Neden Tercih Edildi?** Sürekli büyüyen `if-else` yığınlarını temizlemek ve her indirim türünü kendi sınıfına hapsederek projenin genişletilebilirliğini (**Open-Closed Principle**) artırmak için seçilmiştir.
+* **Uygulama:** `IndirimStratejisi` arayüzü üzerinden türetilen farklı sınıflar, sepet tutarını kendi algoritmalarına göre hesaplar.
+
+#### **2. Observer Pattern (Gözlemci Örüntüsü)**
+* **Kullanım Amacı:** Bir ürünün stok durumu veya fiyatı değiştiğinde, o ürünü takip eden müşterilere otomatik bildirim gönderilmesini sağlamak.
+* **Neden Tercih Edildi?** Nesneler arasındaki bağımlılığı (**tight coupling**) azaltarak, bir nesnedeki değişikliği ilgili diğer tüm nesnelere manuel müdahale olmadan duyurmak amacıyla tercih edilmiştir.
+* **Uygulama:** `Subject` arayüzünü uygulayan ürün sınıfları, stok azaldığında kayıtlı `Observer` (Müşteri) nesnelerini otomatik olarak haberdar eder.
+
+### **Final UML Sınıf Diyagramı (Görünüm)**
+
+```mermaid
+classDiagram
+    direction TB
+
+    %% Faz 3: Strategy
+    class IndirimStratejisi {
+        <<interface>>
+        +hesapla(double tutar) double
+    }
+    class OgrenciIndirimi
+    class BayramIndirimi
+    class Sepet {
+        -IndirimStratejisi strateji
+        +setStrateji(IndirimStratejisi s)
+        +toplamTutarHesapla()
+    }
+
+    %% Faz 3: Observer
+    class Subject {
+        <<interface>>
+        +aboneEkle(Observer o)
+        +bildirimGonder()
+    }
+    class Urun {
+        -int stokAdedi
+        +setStok(int yeniStok)
+    }
+    class Observer {
+        <<interface>>
+        +guncelle(String mesaj)
+    }
+    class Musteri
+
+    %% İlişkiler
+    OgrenciIndirimi ..|> IndirimStratejisi
+    BayramIndirimi ..|> IndirimStratejisi
+    Sepet --> IndirimStratejisi
+    
+    Urun ..|> Subject
+    Musteri ..|> Observer
+    Subject --> Observer : Bildirir
+```
+
+## **## Proje Son Durum**
+
+"Evrimleşen Sistem" projesi, başlangıçta monolitik ve karmaşık olan bir yapının, tasarım desenleri kullanılarak nasıl modüler, esnek ve sürdürülebilir bir mimariye dönüştürülebileceğini göstermektedir. Proje, her aşamada yeni bir tasarım örüntüsü eklenerek sistemin yeteneklerinin artırıldığı bir gelişim sürecini temsil eder.
+
+### **Uygulanan Tasarım Örüntüleri**
+
+1.  **Factory Method (Faz 1):** Ürün nesnelerinin yaratılma mantığını merkezi bir fabrikaya taşıyarak, sistemin yeni ürün tiplerine (Üst Giyim, Alt Giyim vb.) kolayca adapte olmasını sağladık.
+2.  **Decorator (Faz 2):** Mevcut ürün sınıflarını bozmadan, çalışma anında ürünlere "Hediye Paketi" gibi ek özellikler ve maliyetler ekledik.
+3.  **Adapter (Faz 2):** Harici ödeme servislerini (Iyzico, PayU vb.), sistemin mevcut ödeme arayüzüne uyumlu hale getirerek dış sistem bağımlılığını yönettik.
+4.  **Strategy (Faz 3):** İndirim hesaplama mantığını (Öğrenci, Bayram, Sezon Sonu) dinamik hale getirerek, `if-else` kalabalığından kurtulduk.
+5.  **Observer (Faz 3):** Stok durumlarındaki değişiklikleri ilgili kullanıcılara otomatik olarak bildiren bir abonelik mekanizması kurduk.
+
+---
+
+### **Final Mimari Diyagramı**
+
+```mermaid
+classDiagram
+    direction TB
+
+    %% Creational & Structural
+    class UrunFactory { +createKiyafet() }
+    class KiyafetDecorator { -Kiyafet sarmalanan }
+    class OdemeAdapter { -DisOdemeServisi servis }
+
+    %% Behavioral (Faz 3)
+    class IndirimStratejisi { <<interface>> +hesapla() }
+    class OgrenciIndirimi
+    class BayramIndirimi
+    class Sepet { -IndirimStratejisi strateji }
+
+    class Subject { <<interface>> +bildirimGonder() }
+    class Urun { -int stokAdedi }
+    class Observer { <<interface>> +guncelle() }
+    class Musteri
+
+    %% İlişkiler
+    OgrenciIndirimi ..|> IndirimStratejisi
+    BayramIndirimi ..|> IndirimStratejisi
+    Sepet --> IndirimStratejisi
+    
+    Urun ..|> Subject
+    Musteri ..|> Observer
+    Subject --> Observer : Bildirir
+    KiyafetDecorator --|> Kiyafet
+    OdemeAdapter ..|> OdemeSistemi
+```
+### **## Nasıl Çalıştırılır?**
+
+Projeyi yerel bilgisayarınızda test etmek ve tasarım örüntülerinin çıktılarını gözlemlemek için aşağıdaki adımları izleyebilirsiniz:
+
+1.  **Depoyu Klonlayın:**
+    ```bash
+    git clone [https://github.com/hilal-cam/evrimlesen-sistem.git](https://github.com/hilal-cam/evrimlesen-sistem.git)
+    ```
+
+2.  **IDE ile Açın:**
+    Proje klasörünü **IntelliJ IDEA**, **Eclipse** veya **VS Code** üzerinden "Maven Project" olarak içe aktarın.
+
+3.  **CI Kontrolü:**
+    GitHub üzerindeki **Actions** sekmesine tıklayarak otomatik derleme sürecinin (Maven Build) başarısını teyit edebilirsiniz.
+
+4.  **Uygulamayı Başlatın:**
+    `src/main/java/Main.java` dosyasını bulun ve sağ tıklayarak **"Run"** komutunu seçin.
+
+5.  **Konsol Çıktılarını İnceleyin:**
+    Sistem; Ürün Fabrikası, Süsleme (Decorator), Adaptör, Strateji ve Gözlemci (Observer) örüntülerinin çalışma mantığını konsol ekranında adım adım simüle edecektir.
