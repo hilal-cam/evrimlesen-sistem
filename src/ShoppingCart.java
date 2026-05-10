@@ -114,7 +114,46 @@ class OdemeAdapter {
 }
 */
 
+// [FAZ 3: STRATEGY PATTERN]
+/*
+interface IndirimStratejisi {
+    double indirimUygula(double fiyat);
+}
 
+class BayramIndirimi implements IndirimStratejisi {
+    @Override
+    public double indirimUygula(double fiyat) { return fiyat * 0.85; }
+}
+
+class OgrenciIndirimi implements IndirimStratejisi {
+    @Override
+    public double indirimUygula(double fiyat) { return fiyat - 50.0; }
+}
+*/
+
+// [FAZ 3: OBSERVER PATTERN]
+/*
+interface IStokGozlemcisi {
+    void guncellemeAl(String urunAdi, int yeniStok);
+}
+
+class StokGozlemcisi implements IStokGozlemcisi {
+    private String isim;
+    public StokGozlemcisi(String isim) { this.isim = isim; }
+    @Override
+    public void guncellemeAl(String urunAdi, int yeniStok) {
+        System.out.println("BİLDİRİM [" + isim + "]: " + urunAdi + " ürünü stoğa girdi! Yeni stok: " + yeniStok);
+    }
+}
+
+class UrunTakip {
+    private List<IStokGozlemcisi> gozlemciler = new ArrayList<>();
+    public void aboneEkle(IStokGozlemcisi g) { gozlemciler.add(g); }
+    public void stokGuncelle(String urun, int stok) {
+        for (IStokGozlemcisi g : gozlemciler) g.guncellemeAl(urun, stok);
+    }
+}
+*/
 
 class Satici {
     public String saticiAd;
@@ -150,10 +189,16 @@ class Musteri {
     public String musteriAd;
     public UyeTipi uyeTipi;
     public List<Kiyafet> sepet = new ArrayList<>();
+    private IndirimStratejisi indirimStratejisi; // Faz 3: Strategy
 
     public Musteri(String musteriAd, UyeTipi uyeTipi) {
         this.musteriAd = musteriAd;
         this.uyeTipi = uyeTipi;
+    }
+
+    // Faz 3: Stratejiyi değiştirmek için gereken metod
+    public void setIndirimStratejisi(IndirimStratejisi s) {
+        this.indirimStratejisi = s;
     }
 
     public void sepeteEkle(Kiyafet k) {
@@ -165,18 +210,26 @@ class Musteri {
         double kargoUcreti = 35.0;
 
         for (Kiyafet k : sepet) {
-            double urunFiyati = k.getFiyat();
-            // İş mantığı (fiyat hesaplamaları) Faz 0 ile aynı kalıyor
+            double urunFiyati = k.getFiyat(); // Decorator fiyatını (20 TL dahil) alır
+            
+            // İş mantığı hesaplamaları
             if (k.marka == Marka.GUCCI) urunFiyati += 500; 
             else if (k.marka == Marka.MAVI) urunFiyati += 50;
             if (k.renk == Renk.KIRMIZI) urunFiyati *= 0.90;
             if (k.kumasTipi == KumasTipi.KETEN) urunFiyati += 30;
             if (k.beden == Beden.XL) urunFiyati += 10;
             if (k.kiyafetTipi == KiyafetTipi.ELBISE) urunFiyati *= 1.2;
+            
             if (uyeTipi == UyeTipi.GOLD) urunFiyati -= 30;
             else if (uyeTipi == UyeTipi.PREMIUM) urunFiyati -= 70;
 
             toplam += urunFiyati;
+        }
+
+        // --- FAZ 3  ---
+        // Eğer bir indirim stratejisi atanmışsa (Bayram/Öğrenci), toplam fiyata uygula
+        if (indirimStratejisi != null) {
+            toplam = indirimStratejisi.indirimUygula(toplam);
         }
 
         if (toplam > 450) kargoUcreti = 0;
@@ -191,29 +244,37 @@ class Musteri {
 
 public class ShoppingCart {
     public static void main(String[] args) {
-        // 1. Hazırlık: Satıcı ve Müşteri nesneleri
+        // 1. Hazırlık
         Satici satici = new Satici("Hilal Mağazacılık");
         Musteri musteri = new Musteri("Hilal Çam", UyeTipi.GOLD);
         
-        // 2. Faz 1: Ürün Oluşturma (UrunFactory üzerinden)
+        // 2. Faz 1: Ürün Oluşturma
         Kiyafet urun = satici.yeniUrunOlustur();
         
-        // 3. Faz 2: Decorator Uygulama 
-        // Yanda tanımladığın HediyePaketiDecorator sınıfını çağırıyoruz.
+        // 3. Faz 2: Decorator Uygulama (Hediye Paketi)
         Kiyafet hediyePaketliUrun = new HediyePaketiDecorator(urun);
-
-        // Sepete süslenmiş ürünü ekle
         musteri.sepeteEkle(hediyePaketliUrun);
         
-        // 4. Hesaplama ve Ödeme (Adapter kullanımı)
+        // 4. FAZ 3: Observer Uygulama (Stok Takibi)
+        UrunTakip takipSistemi = new UrunTakip();
+        StokGozlemcisi gozlemci = new StokGozlemcisi(musteri.musteriAd);
+        takipSistemi.aboneEkle(gozlemci);
+        
+        // Stok güncellendiğinde müşteriye otomatik bildirim gider.
+        takipSistemi.stokGuncelle(urun.kiyafetTipi.toString(), 25);
+
+        // 5. FAZ 3: Strategy Uygulama (İndirim Seçimi)
+        // Burada BayramIndirimi veya OgrenciIndirimi' nden biri seçildi.
+        musteri.setIndirimStratejisi(new BayramIndirimi());
+        
+        // 6. Final Hesaplama ve Ödeme
         double toplam = musteri.AlisverisTutarHesapla();
         
-        System.out.println("\n--- Faz 2 İşlem Özeti ---");
-        System.out.println("Ürün Tipi: " + urun.kiyafetTipi);
-        System.out.println("Toplam Tutar (Süsleme Dahil): " + toplam + " TL");
+        System.out.println("\n--- Faz 3 Final Özeti ---");
+        System.out.println("Ürün: " + urun.kiyafetTipi);
+        System.out.println("Ödenecek Toplam (Tüm İndirimler ve Süslemeler Dahil): " + toplam + " TL");
         
-        // Ödeme kısmı
+        // Ödeme işlemi (Adapter kullanımı sınıfın içinde kurgulu)
         musteri.odemeIslemleri(KartTipi.TROY, toplam);
     }
 }
-
