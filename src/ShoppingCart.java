@@ -43,14 +43,34 @@ class Kiyafet {
         this.fiyat = fiyat;
     }
 }
+// NOT: Yorum satırına aldığım sınıfları modüler olması için ayrı ayrı .java uzantılı dosyalarda tanımladım. Buraya yorum satırı olarak yazmamın nedeni projeyi tek bir bütün dosyada görebilmek.
+/*
+class UstGiyim extends Kiyafet {
+    public UstGiyim(KiyafetTipi tip, Renk r, Marka m, KumasTipi k, Beden b, double f) {
+        super(tip, r, m, k, b, f);
+    }
+    @Override
+    public double getFiyat() { return fiyat; }
+}
+*/
+/*
+class AltGiyim extends Kiyafet {
+    public AltGiyim(KiyafetTipi tip, Renk r, Marka m, KumasTipi k, Beden b, double f) {
+        super(tip, r, m, k, b, f);
+    }
+    @Override
+    public double getFiyat() { return fiyat; }
+} 
+*/
 
 // --- TASARIM ÖRÜNTÜSÜ: FACTORY CLASS ---
+/*
 class UrunFactory {
     public static Kiyafet kiyafetOlustur(KiyafetTipi tip, Renk rnk, Marka mrk, KumasTipi kms, Beden bdn, double fyt) {
         return new Kiyafet(tip, rnk, mrk, kms, bdn, fyt);
     }
 }
-
+*/
 class Satici {
     public String saticiAd;
     public Satici(String saticiAd) { this.saticiAd = saticiAd; }
