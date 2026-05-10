@@ -171,7 +171,7 @@ Projenin final aşamasında, sistemin çalışma anındaki kararlarını esnek h
 * **Neden Tercih Edildi?** Nesneler arasındaki bağımlılığı (**tight coupling**) azaltarak, bir nesnedeki değişikliği ilgili diğer tüm nesnelere manuel müdahale olmadan duyurmak amacıyla tercih edilmiştir.
 * **Uygulama:** Subject arayüzünü uygulayan ürün sınıfları, stok azaldığında kayıtlı Observer (Müşteri) nesnelerini otomatik olarak haberdar eder.
 
-### **Final UML Sınıf Diyagramı (Görünüm)**
+### **Faz 3 UML Sınıf Diyagramı**
 
 ```mermaid
 classDiagram
