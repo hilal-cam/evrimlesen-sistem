@@ -42,6 +42,10 @@ class Kiyafet {
         this.beden = beden;
         this.fiyat = fiyat;
     }
+ //Decorator' ların çalışması için tanımlanan metot
+	public double getFiyat() {
+        return fiyat;
+	}
 }
 // NOT: Yorum satırına aldığım sınıfları modüler olması için ayrı ayrı .java uzantılı dosyalarda tanımladım. Buraya yorum satırı olarak yazmamın nedeni projeyi tek bir bütün dosyada görebilmek.
 /*
@@ -73,13 +77,35 @@ class UrunFactory {
 */
 /*
 // [FAZ 2: DECORATOR PATTERN]
+abstract class KiyafetDecorator extends Kiyafet {
+    protected Kiyafet urun; // Sarmalanan ürün
+
+    public KiyafetDecorator(Kiyafet urun) {
+        super(urun.kiyafetTipi, urun.renk, urun.marka, urun.kumasTipi, urun.beden, urun.fiyat);
+        this.urun = urun;
+    }
+
+    @Override
+    public double getFiyat() {
+        return urun.getFiyat();
+    }
+}
+
 class HediyePaketiDecorator extends KiyafetDecorator {
     public HediyePaketiDecorator(Kiyafet urun) { super(urun); }
     @Override
     public double getFiyat() { return super.getFiyat() + 20.0; }
 }
 
+
+
 // [FAZ 2: ADAPTER PATTERN]
+class DisOdemeServisi {
+    public void servisOdemesi(String isim, double miktar) {
+        System.out.println("Dış Servis: " + isim + " adına " + miktar + " TL tahsil edildi.");
+    }
+}
+
 class OdemeAdapter {
     private DisOdemeServisi servis = new DisOdemeServisi();
     public void odemeYap(String isim, double tutar) {
@@ -139,7 +165,7 @@ class Musteri {
         double kargoUcreti = 35.0;
 
         for (Kiyafet k : sepet) {
-            double urunFiyati = k.fiyat;
+            double urunFiyati = k.getFiyat();
             // İş mantığı (fiyat hesaplamaları) Faz 0 ile aynı kalıyor
             if (k.marka == Marka.GUCCI) urunFiyati += 500; 
             else if (k.marka == Marka.MAVI) urunFiyati += 50;
@@ -148,7 +174,7 @@ class Musteri {
             if (k.beden == Beden.XL) urunFiyati += 10;
             if (k.kiyafetTipi == KiyafetTipi.ELBISE) urunFiyati *= 1.2;
             if (uyeTipi == UyeTipi.GOLD) urunFiyati -= 30;
-            else if (uyeTipi == UyeTipi.PREMİUM) urunFiyati -= 70;
+            else if (uyeTipi == UyeTipi.PREMIUM) urunFiyati -= 70;
 
             toplam += urunFiyati;
         }
